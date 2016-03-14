@@ -22,7 +22,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // Create a new view
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.my_text_view,parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.my_text_view,parent, false);
         MyViewHolder viewHolder = new MyViewHolder(view);
 
         return viewHolder;
@@ -53,6 +54,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             mMyText = (TextView) v.findViewById(R.id.item_my_text);
         }
     }
+
 
     public interface OnAdapterInteractionListener{
         void o​nItemClicked(View view, int position);
