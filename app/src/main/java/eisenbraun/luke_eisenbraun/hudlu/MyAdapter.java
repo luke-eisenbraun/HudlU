@@ -10,15 +10,16 @@ import android.widget.TextView;
 import java.util.List;
 
 import eisenbraun.luke_eisenbraun.hudlu.models.MashableNews;
+import eisenbraun.luke_eisenbraun.hudlu.models.MashableNewsItem;
 
 /**
  * Created by luke.eisenbraun on 3/14/2016.
  */
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
-    private List<MashableNews> mDataSet;
+    private List<MashableNewsItem> mDataSet;
     private OnAdapterInteractionListener mListener;
 
-    public MyAdapter(Context context, List<MashableNews> myDataSet){
+    public MyAdapter(Context context, List<MashableNewsItem> myDataSet){
         mDataSet = myDataSet;
         mListener = (OnAdapterInteractionListener) context;
     }

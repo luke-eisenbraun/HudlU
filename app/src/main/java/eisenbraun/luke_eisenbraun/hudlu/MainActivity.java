@@ -28,12 +28,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eisenbraun.luke_eisenbraun.hudlu.models.MashableNews;
+import eisenbraun.luke_eisenbraun.hudlu.models.MashableNewsItem;
 
 public class MainActivity extends AppCompatActivity implements MyAdapter.OnAdapterInteractionListener{
     private RecyclerView mRecyclerView;
     private MyAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private final List<MashableNews> myDataSet = new ArrayList<>();
+    private final List<MashableNewsItem> myDataSet = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,9 +103,8 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnAdapt
                         public void onResponse(String response) {
                             // Asynchronous 'success' call back that runs on the main thread
                             MashableNews mashableNews = new Gson().fromJson(response, MashableNews.class);
-                            myDataSet.addAll(mashableNews);
+                            myDataSet.addAll(mashableNews.newsItems);
                             mAdapter.notifyDataSetChanged();
-                            Log.d("your tag", mashableNews.newsItems.get(0).title);
                         }
                     },
                     new Response.ErrorListener() {
