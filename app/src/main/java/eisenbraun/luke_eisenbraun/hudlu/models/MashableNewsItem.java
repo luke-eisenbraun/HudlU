@@ -7,5 +7,5 @@ public class MashableNewsItem {
     public String title;
     public String author;
     public String link;
-    public String image;
+    public String feature_image;
 }
