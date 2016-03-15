@@ -1,5 +1,8 @@
 package eisenbraun.luke_eisenbraun.hudlu;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,6 +14,17 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+
+import eisenbraun.luke_eisenbraun.hudlu.models.MashableNews;
 
 public class MainActivity extends AppCompatActivity implements MyAdapter.OnAdapterInteractionListener{
     private RecyclerView mRecyclerView;
@@ -40,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnAdapt
                         .setAction("Action", null).show();
             }
         });
+
+        fetchLatestNews();
     }
 
     @Override
@@ -68,5 +84,42 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnAdapt
     @Override
     public void onItemClicked(View view, int position){
         Snackbar.make(view, myDataSet[position], Snackbar.LENGTH_SHORT).show();
+    }
+
+    public void fetchLatestNews(){
+        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
+
+        if(networkInfo != null && networkInfo.isConnected()) { // Connected
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            StringRequest request = new StringRequest(Request.Method.GET,
+                    "http://mashable.com/stories.json?hot_per_page=0&new_per_page=5&rising_per_page=0",
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            // Asynchronous 'success' call back that runs on the main thread
+                            MashableNews mashableNews = new Gson().fromJson(response, MashableNews.class);
+                            Log.d("your tag", mashableNews.newsItems.get(0).title);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // Asynchronous 'error' call back that runs on the main thread
+                            Toast toast = Toast.makeText(getApplicationContext(), "Error occurred while fetching news", Toast.LENGTH_SHORT);
+                            toast.show();
+                        }
+                    });
+
+            requestQueue.add(request);
+
+            Toast toast = Toast.makeText(getApplicationContext(), "Fetching latest news", Toast.LENGTH_SHORT);
+            toast.show();
+
+
+        } else { // Disconnected
+            Toast toast = Toast.makeText(getApplicationContext(), "No network connectivity", Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 }
