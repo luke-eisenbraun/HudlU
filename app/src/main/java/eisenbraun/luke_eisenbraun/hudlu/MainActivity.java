@@ -24,13 +24,16 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import eisenbraun.luke_eisenbraun.hudlu.models.MashableNews;
 
 public class MainActivity extends AppCompatActivity implements MyAdapter.OnAdapterInteractionListener{
     private RecyclerView mRecyclerView;
     private MyAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private final String[] myDataSet = new String[]{"Adam Gucwa", "Alberto Chamorro", "Chanse Strode", "Craig Zheng", "David Bohner", "Eric Clymer", "Jessica Hoffman", "Jon Evans", "Jordan Degner", "Mitchel Pigsley", "Peter Yasi", "Seth Prauner", "Sue Yi", "Zach Ramaekers", "Mike Isman", "Josh Cox"};
+    private final List<MashableNews> myDataSet = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnAdapt
 
     @Override
     public void onItemClicked(View view, int position){
-        Snackbar.make(view, myDataSet[position], Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(view, myDataSet.get(position).author, Snackbar.LENGTH_SHORT).show();
     }
 
     public void fetchLatestNews(){
@@ -99,6 +102,8 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnAdapt
                         public void onResponse(String response) {
                             // Asynchronous 'success' call back that runs on the main thread
                             MashableNews mashableNews = new Gson().fromJson(response, MashableNews.class);
+                            myDataSet.addAll(mashableNews);
+                            mAdapter.notifyDataSetChanged();
                             Log.d("your tag", mashableNews.newsItems.get(0).title);
                         }
                     },
@@ -106,20 +111,17 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnAdapt
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             // Asynchronous 'error' call back that runs on the main thread
-                            Toast toast = Toast.makeText(getApplicationContext(), "Error occurred while fetching news", Toast.LENGTH_SHORT);
-                            toast.show();
+                            Toast.makeText(getApplicationContext(), "Error occurred while fetching news", Toast.LENGTH_SHORT).show();
                         }
                     });
 
             requestQueue.add(request);
 
-            Toast toast = Toast.makeText(getApplicationContext(), "Fetching latest news", Toast.LENGTH_SHORT);
-            toast.show();
+            Toast.makeText(getApplicationContext(), "Fetching latest news", Toast.LENGTH_SHORT).show();
 
 
         } else { // Disconnected
-            Toast toast = Toast.makeText(getApplicationContext(), "No network connectivity", Toast.LENGTH_SHORT);
-            toast.show();
+            Toast.makeText(getApplicationContext(), "No network connectivity", Toast.LENGTH_SHORT).show();
         }
     }
 }
