@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,7 +19,6 @@ import com.android.volley.toolbox.Volley;
 
 import java.util.List;
 
-import eisenbraun.luke_eisenbraun.hudlu.models.MashableNews;
 import eisenbraun.luke_eisenbraun.hudlu.models.MashableNewsItem;
 
 /**
@@ -28,11 +28,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private List<MashableNewsItem> mDataSet;
     private OnAdapterInteractionListener mListener;
     private RequestQueue mRequestQueue;
+    private Context context;
 
     public MyAdapter(Context context, List<MashableNewsItem> myDataSet){
         mDataSet = myDataSet;
         mListener = (OnAdapterInteractionListener) context;
         mRequestQueue = Volley.newRequestQueue(context);
+        this.context = context;
     }
 
     @Override
@@ -47,7 +49,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        MashableNewsItem mItem = mDataSet.get(position);
+        final MashableNewsItem mItem = mDataSet.get(position);
         holder.mMyText.setText(mItem.title);
         holder.mAuthorText.setText(mItem.author);
 
@@ -74,6 +76,34 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 mListener.o​nItemClicked(v, position);
             }
         });
+
+        // Set color of favorite
+        boolean isFavorite = FavoriteUtil(context, mItem);
+        if(isFavorite) {
+            holder.mButton.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
+            holder.mButton.setTextColor(context.getResources().getColor(R.color.colorWhite));
+        } else {
+            holder.mButton.setBackgroundColor(context.getResources().getColor(R.color.colorWhite));
+            holder.mButton.setTextColor(context.getResources().getColor(R.color.colorAccent));
+        }
+
+        holder.mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean isFavorite = FavoriteUtil.isFavorite(context, mItem);
+                if(isFavorite) {
+                    FavoriteUtil.removeFavorite(context, mItem);
+                    holder.mButton.setBackgroundColor(context.getResources().getColor(R.color.colorWhite));
+                    holder.mButton.setTextColor(context.getResources().getColor(R.color.colorAccent));
+                    Log.d("HudlU", "Removing favorite: " + mItem.title);
+                } else {
+                    FavoriteUtil.addFavorite(context, mItem);
+                    holder.mButton.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
+                    holder.mButton.setTextColor(context.getResources().getColor(R.color.colorWhite));
+                    Log.d("HudlU", "Adding favorite: " + mItem.title);
+                }
+            }
+        });
     }
 
     @Override
@@ -85,12 +115,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         ImageView mImage;
         TextView mMyText;
         TextView mAuthorText;
+        Button mButton;
 
         public MyViewHolder(View v) {
             super(v);
             mMyText = (TextView) v.findViewById(R.id.item_title);
             mAuthorText = (TextView) v.findViewById(R.id.item_author);
             mImage = (ImageView) v.findViewById(R.id.item_image);
+            mButton = (Button) v.findViewById(R.id.button_favorite);
         }
     }
 

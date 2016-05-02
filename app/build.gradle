@@ -29,3 +29,14 @@ dependencies {
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.mcxiaoke.volley:library:1.0.19'
 }
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "io.realm:realm-gradle-plugin:0.89.1"
+    }
+}
+
+apply plugin: 'realm-android'

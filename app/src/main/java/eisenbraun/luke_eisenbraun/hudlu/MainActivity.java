@@ -1,11 +1,15 @@
 package eisenbraun.luke_eisenbraun.hudlu;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,15 +54,7 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnAdapt
         mAdapter = new MyAdapter(this, myDataSet);
         mRecyclerView.setAdapter(mAdapter);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
+        checkFirstRun();
         fetchLatestNews();
     }
 
@@ -78,7 +74,9 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnAdapt
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Log.d("HudlU", "Settings menu item clicked.");
+            Log.d("HudlU", "Favorite menu item clicked.");
+            Intent intent = new Intent(this, FavoriteActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -90,6 +88,20 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnAdapt
         Snackbar.make(view, myDataSet.get(position).author, Snackbar.LENGTH_SHORT).show();
     }
 
+    public void checkFirstRun() {
+        boolean isFirstRun = getSharedPreferences("Prefs", Context.MODE_PRIVATE).getBoolean("isFirstRun", true);
+
+        if(isFirstRun) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setMessage("This is your first run!");
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+            getSharedPreferences("Prefs", Context.MODE_PRIVATE).edit().putBoolean("isFirstRun", false).apply();
+        }
+    }
+
     public void fetchLatestNews(){
         ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
@@ -97,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnAdapt
         if(networkInfo != null && networkInfo.isConnected()) { // Connected
             RequestQueue requestQueue = Volley.newRequestQueue(this);
             StringRequest request = new StringRequest(Request.Method.GET,
-                    "http://mashable.com/stories.json?hot_per_page=0&new_per_page=5&rising_per_page=0",
+                    "http://mashable.com/stories.json?hot_per_page=0&new_per_page=10&rising_per_page=0",
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
