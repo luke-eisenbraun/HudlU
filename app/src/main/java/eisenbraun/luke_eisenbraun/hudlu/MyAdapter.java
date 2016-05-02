@@ -1,7 +1,9 @@
 package eisenbraun.luke_eisenbraun.hudlu;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -78,7 +80,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         });
 
         // Set color of favorite
-        boolean isFavorite = FavoriteUtil(context, mItem);
+        boolean isFavorite = FavoriteUtil.isFavorite(context, mItem);
         if(isFavorite) {
             holder.mButton.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
             holder.mButton.setTextColor(context.getResources().getColor(R.color.colorWhite));
@@ -102,6 +104,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     holder.mButton.setTextColor(context.getResources().getColor(R.color.colorWhite));
                     Log.d("HudlU", "Adding favorite: " + mItem.title);
                 }
+            }
+        });
+
+        final MashableNewsItem currentItem = mDataSet.get(position);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(currentItem.link));
+                context.startActivity(intent);
             }
         });
     }

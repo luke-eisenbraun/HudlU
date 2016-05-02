@@ -11,7 +11,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="eisenbraun.luke_eisenbraun.hudlu.MainActivity"
     tools:showIn="@layout/activity_main"
-    android:background="#3f3f3f"
+    android:background="@color/colorPrimaryDark"
     android:id="@+id/my_recycler_view"
     android:scrollbars="vertical">
 

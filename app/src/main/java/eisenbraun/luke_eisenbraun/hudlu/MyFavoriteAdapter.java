@@ -26,12 +26,12 @@ import eisenbraun.luke_eisenbraun.hudlu.models.MashableNewsItem;
  * Created by luke.eisenbraun on 4/26/2016.
  */
 public class MyFavoriteAdapter extends RecyclerView.Adapter<MyFavoriteAdapter.MyFavoriteViewHolder> {
-    private List<MashableNewsItem> mDataset;
+    private List<MashableNewsItem> mDataSet;
     private RequestQueue mRequestQueue;
     private Context context;
 
-    public  MyFavoriteAdapter(List<MashableNewsItem> myDataset, Context context){
-        this.mDataset = myDataset;
+    public  MyFavoriteAdapter(List<MashableNewsItem> mDataSet, Context context){
+        this.mDataSet = mDataSet;
         mRequestQueue = Volley.newRequestQueue(context);
         this.context = context;
     }
@@ -47,8 +47,8 @@ public class MyFavoriteAdapter extends RecyclerView.Adapter<MyFavoriteAdapter.My
 
     @Override
     public void onBindViewHolder(final MyFavoriteViewHolder holder, final int position) {
-        final MashableNewsItem currItem = mDataset.get(position);
-        ImageRequest request = new ImageRequest(currItem.feature_image,
+        final MashableNewsItem currentItem = mDataSet.get(position);
+        ImageRequest request = new ImageRequest(currentItem.feature_image,
                 new Response.Listener<Bitmap>() {
                     @Override
                     public void onResponse(Bitmap bitmap) {
@@ -63,12 +63,12 @@ public class MyFavoriteAdapter extends RecyclerView.Adapter<MyFavoriteAdapter.My
                     }
                 });
         mRequestQueue.add(request);
-        holder.textTitleView.setText(currItem.title);
-        holder.textAuthorView.setText(currItem.author);
+        holder.textTitleView.setText(currentItem.title);
+        holder.textAuthorView.setText(currentItem.author);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(currItem.link));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(currentItem.link));
                 context.startActivity(intent);
             }
         });
@@ -76,7 +76,7 @@ public class MyFavoriteAdapter extends RecyclerView.Adapter<MyFavoriteAdapter.My
 
     @Override
     public int getItemCount() {
-        return mDataset.size();
+        return mDataSet.size();
     }
     
 
