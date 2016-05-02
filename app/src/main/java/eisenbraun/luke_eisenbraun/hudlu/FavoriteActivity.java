@@ -47,14 +47,14 @@ public class FavoriteActivity extends AppCompatActivity {
     }
 
     public void loadFavorites(){
-        RealmResults<Favorite> favs = FavoriteUtil.getAllFavorites(this.getApplicationContext());
-        for (int i=0; i<favs.size(); ++i){
+        RealmResults<Favorite> favorites = FavoriteUtil.getAllFavorites(this.getApplicationContext());
+        for (int i=0; i<favorites.size(); ++i){
             MashableNewsItem item = new MashableNewsItem();
-            Favorite fav = favs.get(i);
-            item.title = fav.getTitle();
-            item.author = fav.getAuthor();
-            item.feature_image = fav.getImage();
-            item.link = fav.getLink();
+            Favorite favorite = favorites.get(i);
+            item.title = favorite.getTitle();
+            item.author = favorite.getAuthor();
+            item.feature_image = favorite.getImage();
+            item.link = favorite.getLink();
             myDataset.add(item);
         }
     }

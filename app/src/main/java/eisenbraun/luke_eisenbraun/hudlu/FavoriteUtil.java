@@ -14,24 +14,24 @@ import io.realm.RealmResults;
 public class FavoriteUtil {
     public static void addFavorite(Context context, MashableNewsItem newsItem){
         Realm realm = Realm.getInstance(context);
-        Favorite fav = new Favorite(
+        Favorite favorite = new Favorite(
                 newsItem.title,
                 newsItem.author,
                 newsItem.feature_image,
                 newsItem.link);
         realm.beginTransaction();
-        realm.copyToRealm(fav);
+        realm.copyToRealm(favorite);
         realm.commitTransaction();
         realm.close();
     }
 
     public static void removeFavorite(Context context, MashableNewsItem newsItem){
         Realm realm = Realm.getInstance(context);
-        Favorite fav = realm.where(Favorite.class).equalTo("title", newsItem.title).findFirst();
-        if (fav != null) {
-            Log.d("HudlU", "found: " + fav.getTitle() + ", removing.");
+        Favorite favorite = realm.where(Favorite.class).equalTo("title", newsItem.title).findFirst();
+        if (favorite != null) {
+            Log.d("HudlU", "found: " + favorite.getTitle() + ", removing.");
             realm.beginTransaction();
-            fav.removeFromRealm();
+            favorite.removeFromRealm();
             realm.commitTransaction();
         }
         realm.close();
@@ -39,9 +39,9 @@ public class FavoriteUtil {
 
     public static boolean isFavorite(Context context, MashableNewsItem newsItem){
         Realm realm = Realm.getInstance(context);
-        Favorite fav = realm.where(Favorite.class).equalTo("title", newsItem.title).findFirst();
-        if (fav != null) {
-            Log.d("HudlU", "found: " + fav.getTitle());
+        Favorite favorite = realm.where(Favorite.class).equalTo("title", newsItem.title).findFirst();
+        if (favorite != null) {
+            Log.d("HudlU", "found: " + favorite.getTitle());
             realm.close();
             return true;
         }
@@ -51,8 +51,8 @@ public class FavoriteUtil {
 
     public static RealmResults<Favorite> getAllFavorites(Context context){
         Realm realm = Realm.getInstance(context);
-        RealmResults<Favorite> favs = realm.where(Favorite.class).findAll();
-        Log.d("HudlU", "found: " + favs.size());
-        return favs;
+        RealmResults<Favorite> favorites = realm.where(Favorite.class).findAll();
+        Log.d("HudlU", "found: " + favorites.size());
+        return favorites;
     }
 }

@@ -27,13 +27,11 @@ import eisenbraun.luke_eisenbraun.hudlu.models.MashableNewsItem;
  */
 public class MyFavoriteAdapter extends RecyclerView.Adapter<MyFavoriteAdapter.MyFavoriteViewHolder> {
     private List<MashableNewsItem> mDataset;
-    //private MyFavoriteAdapter.OnFavoriteAdapterInteractionListener mListener;
     private RequestQueue mRequestQueue;
     private Context context;
 
     public  MyFavoriteAdapter(List<MashableNewsItem> myDataset, Context context){
         this.mDataset = myDataset;
-        //mListener = (OnFavoriteAdapterInteractionListener)context;
         mRequestQueue = Volley.newRequestQueue(context);
         this.context = context;
     }
@@ -70,7 +68,6 @@ public class MyFavoriteAdapter extends RecyclerView.Adapter<MyFavoriteAdapter.My
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //mListener.o​nItemClicked(v, position);
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(currItem.link));
                 context.startActivity(intent);
             }
@@ -81,12 +78,7 @@ public class MyFavoriteAdapter extends RecyclerView.Adapter<MyFavoriteAdapter.My
     public int getItemCount() {
         return mDataset.size();
     }
-
-    /*
-    public interface OnFavoriteAdapterInteractionListener {
-        void o​nItemClicked(View view, int p​osition);
-    }
-    */
+    
 
     public class MyFavoriteViewHolder extends RecyclerView.ViewHolder {
         ImageView imgView;
